@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 
 import { FilterCheckbox, FilterChecboxProps } from './filter-checkbox'
 import { Input } from '../ui/input'
@@ -10,7 +10,7 @@ type Item = FilterChecboxProps
 interface Props {
     title: string
     items: Item[]
-    defaultItems?: Item[]
+    defaultItems: Item[]
     limit?: number
     searchInputPlaceholder?: string
     className?: string
@@ -22,13 +22,24 @@ export const CheckboxFiltersGroup: React.FC<Props> = ({
     title,
     items,
     defaultItems,
-    limit = 5,
+    limit = 6,
     searchInputPlaceholder = 'Поиск...',
     className,
     onChange,
     defaultValue
 }) => {
-    // const [showAll, setShowAll] = React.useState(false);
+    const [showAll, setShowAll] = React.useState(false)
+    const [searchValue, setSearchValue] = useState('')
+    const onChangeSearchInput = (value: string) => {
+        setSearchValue(value)
+    }
+
+    const list = showAll
+        ? items.filter((item) =>
+              item.text.toLowerCase().includes(searchValue.toLowerCase())
+          )
+        : defaultItems.slice(0, limit)
+
     // const [selected, { add, toggle }] = useSet<string>(new Set([]));
 
     // const onCheckedChange = (value: string) => {
@@ -49,15 +60,18 @@ export const CheckboxFiltersGroup: React.FC<Props> = ({
         <div className={className}>
             <p className="font-bold mb-3">{title}</p>
 
-            <div className="mb-5">
-                <Input
-                    placeholder={searchInputPlaceholder}
-                    className="bg-gray-50 border-none"
-                />
-            </div>
+            {showAll && (
+                <div className="mb-5">
+                    <Input
+                        onChange={(e) => onChangeSearchInput(e.target.value)}
+                        placeholder={searchInputPlaceholder}
+                        className="bg-gray-50 border-none"
+                    />
+                </div>
+            )}
 
             <div className="flex flex-col gap-4 max-h-96 pr-2 overflow-auto scrollbar">
-                {items.map((item, index) => (
+                {list.map((item, index) => (
                     <FilterCheckbox
                         key={index}
                         text={item.text}
