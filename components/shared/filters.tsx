@@ -7,26 +7,34 @@ import { Input } from '../ui/input'
 import { RangeSlider } from '../ui/range-slider'
 import { CheckboxFiltersGroup } from './checkbox-filters-group'
 import { useListIngredients } from '@/hooks/useListIngredients'
+import { useSet } from 'react-use'
+import qs from 'qs'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 interface Props {
     className?: string
 }
 
 interface PriceProps {
-    priceFrom: number
-    priceTo: number
+    priceFrom?: number
+    priceTo?: number
+}
+
+interface QueryFilters extends PriceProps {
+    filters: string[]
+    ingredients: string[]
 }
 
 export const Filters: React.FC<Props> = ({ className }) => {
+    const searchParams = useSearchParams()
+    const router = useRouter()
     const { ingredients, loading, onAddId, selectedIds } = useListIngredients()
-    const [prices, setPrice] = React.useState<PriceProps>({
-        priceFrom: 0,
-        priceTo: 1000
-    })
+    const [prices, setPrice] = React.useState<PriceProps>({})
     const items = ingredients.map((item) => ({
         value: String(item.id),
         text: item.name
     }))
+    const [filters, { toggle: toggleFilter }] = useSet(new Set<string>([]))
 
     const updatePrice = (name: keyof PriceProps, value: number) => {
         setPrice({
@@ -35,14 +43,34 @@ export const Filters: React.FC<Props> = ({ className }) => {
         })
     }
 
+    React.useEffect(() => {
+        const filter = {
+            ...prices,
+            filters: Array.from(filters),
+            ingredients: Array.from(selectedIds)
+        }
+        const queryString = qs.stringify(filter, {
+            arrayFormat: 'comma'
+        })
+        router.push(`?${queryString}`, {
+            scroll: false
+        })
+    }, [prices, selectedIds, filters])
+
     return (
         <div className={className}>
             <Title text="Фильтрация" size="sm" className="mb-5 font-bold" />
-
-            <div className="flex flex-col gap-4">
-                <FilterCheckbox text="Можно собирать" value="1" />
-                <FilterCheckbox text="Новинки" value="2" />
-            </div>
+            <CheckboxFiltersGroup
+                title="Особенности"
+                name="peculiarities"
+                className="mt-5"
+                onClickCheckbox={toggleFilter}
+                selectedIds={filters}
+                items={[
+                    { text: 'Можно собирать', value: '1' },
+                    { text: 'Новинки', value: '2' }
+                ]}
+            />
 
             <div className="mt-5 border-y border-y-neutral-100 py-6 pb-7">
                 <p className="font-bold mb-3">Цена от и до:</p>
@@ -73,7 +101,7 @@ export const Filters: React.FC<Props> = ({ className }) => {
                     min={0}
                     max={1000}
                     step={10}
-                    value={[prices.priceFrom, prices.priceTo]}
+                    value={[prices.priceFrom || 0, prices.priceTo || 1000]}
                     onValueChange={([priceFrom, priceTo]) =>
                         setPrice({ priceFrom, priceTo })
                     }
