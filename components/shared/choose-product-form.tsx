@@ -2,22 +2,24 @@ import { cn } from '@/lib/utils'
 import React from 'react'
 import { Title } from './title'
 import { Button } from '../ui/button'
+import { ProductItem } from '@prisma/client'
 
 interface Props {
     imageUrl: string
     name: string
     className?: string
-    items?: any[]
+    items: ProductItem[]
     onClickAdd?: VoidFunction
 }
 
 export const ChooseProductForm: React.FC<Props> = ({
     imageUrl,
     name,
+    items,
     onClickAdd,
     className
 }) => {
-    const totalPrice = 550
+    const totalPrice = items.map((item) => item?.price || 0)
     const textDetails = `description`
     return (
         <div className={cn('flex flex-1', className)}>
