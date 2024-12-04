@@ -9,18 +9,19 @@ interface Props {
     name: string
     className?: string
     items: ProductItem[]
-    onClickAdd?: VoidFunction
+    onSubmit?: VoidFunction
+    loading?: boolean
 }
 
 export const ChooseProductForm: React.FC<Props> = ({
     imageUrl,
     name,
     items,
-    onClickAdd,
+    onSubmit,
+    loading,
     className
 }) => {
     const totalPrice = items.map((item) => item?.price || 0)
-    const textDetails = `description`
     return (
         <div className={cn('flex flex-1', className)}>
             <div className="flex items-center justify-center flex-1 relative w-full">
@@ -33,9 +34,12 @@ export const ChooseProductForm: React.FC<Props> = ({
 
             <div className="w-[490px] bg-[#FCFCFC] p-7">
                 <Title text={name} size="md" className="font-extrabold mb-1" />
-                <p className="text-gray-400">{textDetails}</p>
 
-                <Button className="h-[55px] px-10 text-base rounded-[18px] w-full">
+                <Button
+                    onClick={() => onSubmit?.()}
+                    loading={loading}
+                    className="h-[55px] px-10 text-base rounded-[18px] w-full"
+                >
                     Добавить в корзину за {totalPrice} ₽
                 </Button>
             </div>

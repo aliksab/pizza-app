@@ -21,8 +21,9 @@ interface Props {
     name: string
     className?: string
     ingredients: Ingredient[]
+    loading?: boolean
     items: ProductItem[]
-    onClickAddCart?: VoidFunction
+    onSubmit: (itemId: number, ingredients: number[]) => void
 }
 
 export const ChoosePizzaForm: React.FC<Props> = ({
@@ -30,8 +31,9 @@ export const ChoosePizzaForm: React.FC<Props> = ({
     name,
     items,
     ingredients,
-    onClickAddCart,
-    className
+    onSubmit,
+    className,
+    loading
 }) => {
     const [size, setSize] = React.useState<PizzaSize>(20)
     const [type, setType] = React.useState<PizzaType>(1)
@@ -50,6 +52,9 @@ export const ChoosePizzaForm: React.FC<Props> = ({
     const textDetails = `${size} см, тесто ${mapPizzaType[type]}`
 
     const handleAddToCart = () => {
+        if (currentItemId) {
+            onSubmit(currentItemId, Array.from(selectedIngredients))
+        }
         console.log({
             size,
             type,
@@ -65,6 +70,11 @@ export const ChoosePizzaForm: React.FC<Props> = ({
             (pizza) => Number(pizza.size) === Number(item.value)
         )
     }))
+
+    const currentItemId = items.find(
+        (item) => item.pizzaType === type && item.size === size
+    )?.id
+
     React.useEffect(() => {
         const isAvaibleSize = avaiblePizzaSizes?.find(
             (item) => Number(item.value) === size && !item.disabled
@@ -112,6 +122,7 @@ export const ChoosePizzaForm: React.FC<Props> = ({
 
                 <Button
                     onClick={handleAddToCart}
+                    loading={loading}
                     className="h-[55px] px-10 text-base rounded-[18px] w-full"
                 >
                     Добавить в корзину за {totalPrice} ₽
