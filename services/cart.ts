@@ -1,5 +1,5 @@
 import { instance } from './instance'
-import { CartDTO } from './dto/cart.dto'
+import { CartDTO, CreateCartItemsValues } from './dto/cart.dto'
 
 export const fetchCart = async (): Promise<CartDTO> => {
     const { data } = await instance.get<CartDTO>('/cart')
@@ -19,7 +19,9 @@ export const removeCartItem = async (id: number): Promise<CartDTO> => {
     return data
 }
 
-export const addCartItem = async (values: any): Promise<CartDTO> => {
+export const addCartItem = async (
+    values: CreateCartItemsValues
+): Promise<CartDTO> => {
     const { data } = await instance.post<CartDTO>('/cart', values)
     return data
 }

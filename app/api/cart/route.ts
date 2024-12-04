@@ -45,6 +45,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
     try {
+        console.log('TUT')
         let token = req.cookies.get('cartToken')?.value
 
         if (!token) {
@@ -91,6 +92,7 @@ export async function POST(req: NextRequest) {
         const updatedUserCart = await updateCartTotalAmount(token)
         const resp = NextResponse.json(updatedUserCart)
         resp.cookies.set('cartToken', token)
+        console.log(resp)
         return resp
     } catch (error) {
         console.log(error)
