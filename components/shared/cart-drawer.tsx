@@ -13,13 +13,15 @@ import {
     SheetTrigger
 } from '@/components/ui/sheet'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Button } from '../ui/button'
-import { ArrowRight } from 'lucide-react'
+import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { getCartItemsDetails } from '@/lib/get-cart-items-details'
 import { CartDrawerItem } from './cart-driver-item'
 import { useCartStore } from '@/store/cart'
 import { PizzaSize, PizzaType } from '@/constans/pizza'
 import { useShallow } from 'zustand/react/shallow'
+import { Title } from './title'
 interface Props {
     className?: string
 }
@@ -64,70 +66,108 @@ export const CartDrawer: React.FC<React.PropsWithChildren<Props>> = ({
                 side="right"
                 className="flex flex-col justify-between pb-0 bg-[#F3F3F7]"
             >
-                <SheetHeader>
-                    <SheetTitle>
-                        В корзине{' '}
-                        <span className="font-bold">{items.length} товара</span>
-                    </SheetTitle>
-                </SheetHeader>
-
-                <div className="-mx-6 mt-5 flex-1 overflow-auto scrollbar">
-                    {items.map((item) => (
-                        <div className="mb-2">
-                            <CartDrawerItem
-                                key={item.id}
-                                id={item.id}
-                                imageUrl={item.imageUrl}
-                                details={
-                                    item.pizzaSize && item.pizzaType
-                                        ? getCartItemsDetails(
-                                              item.ingredients,
-                                              item.pizzaType as PizzaType,
-                                              item.pizzaSize as PizzaSize
-                                          )
-                                        : ''
-                                }
-                                price={item.price}
-                                quantity={item.quantity}
-                                name={item.name}
-                                onClickCountButton={(type) => {
-                                    onClickCountButton(
-                                        item.id,
-                                        item.quantity,
-                                        type
-                                    )
-                                }}
-                                onClickRemove={() => {
-                                    removeCartItem(item.id)
-                                }}
-                            />
-                        </div>
-                    ))}
-                </div>
-
-                <SheetFooter className="-mx-6 bg-white p-8">
-                    <div className="w-full">
-                        <div className="flex flex-col mb-4">
-                            <span className="flex flex-1 justify-between text-lg text-neutral-500">
-                                Итого
-                                <span className="font-bold text-lg text-neutral-800">
-                                    {totalAmount} ₽
-                                </span>
+                <div
+                    className={cn(
+                        'flex flex-col h-full',
+                        !totalAmount && 'justify-center'
+                    )}
+                >
+                    <SheetHeader>
+                        <SheetTitle>
+                            В корзине{' '}
+                            <span className="font-bold">
+                                {items.length} товара
                             </span>
-                            <div className="flex-1 border-b border-dashed border-b-neutral-500 relative -top-1 mx-2" />
-
-                            <Link href="/cart">
+                        </SheetTitle>
+                    </SheetHeader>
+                    {!totalAmount && (
+                        <div className="flex flex-col items-center justify-center w-72 mx-auto">
+                            <Image
+                                src={'/assets/images/empty-box.png'}
+                                alt="empty cart"
+                                width={120}
+                                height={120}
+                            />
+                            <Title
+                                size="sm"
+                                text="Ваша корзина пуста"
+                                className="text-center font-bold my-2"
+                            />
+                            <p className="text-center text-neutral-500 mb-5">
+                                Добавьте любой продукт, чтобы сделать заказ
+                            </p>
+                            <SheetClose asChild>
                                 <Button
-                                    type="submit"
-                                    className="w-full h-12 text-base"
+                                    className="w-56 h-12 text-base"
+                                    size="lg"
                                 >
-                                    Оформить заказ
-                                    <ArrowRight className="w-5 ml-2" />
+                                    <ArrowLeft className="w-5 mr-2" />
+                                    Вернуться к покупкам
                                 </Button>
-                            </Link>
+                            </SheetClose>
                         </div>
-                    </div>
-                </SheetFooter>
+                    )}
+                    {totalAmount > 0 && (
+                        <>
+                            <div className="-mx-6 mt-5 flex-1 overflow-auto scrollbar">
+                                {items.map((item) => (
+                                    <div className="mb-2">
+                                        <CartDrawerItem
+                                            key={item.id}
+                                            id={item.id}
+                                            imageUrl={item.imageUrl}
+                                            details={
+                                                item.pizzaSize && item.pizzaType
+                                                    ? getCartItemsDetails(
+                                                          item.ingredients,
+                                                          item.pizzaType as PizzaType,
+                                                          item.pizzaSize as PizzaSize
+                                                      )
+                                                    : ''
+                                            }
+                                            price={item.price}
+                                            quantity={item.quantity}
+                                            name={item.name}
+                                            onClickCountButton={(type) => {
+                                                onClickCountButton(
+                                                    item.id,
+                                                    item.quantity,
+                                                    type
+                                                )
+                                            }}
+                                            onClickRemove={() => {
+                                                removeCartItem(item.id)
+                                            }}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                            <SheetFooter className="-mx-6 bg-white p-8">
+                                <div className="w-full">
+                                    <div className="flex flex-col mb-4">
+                                        <span className="flex flex-1 justify-between text-lg text-neutral-500">
+                                            Итого
+                                            <span className="font-bold text-lg text-neutral-800">
+                                                {totalAmount} ₽
+                                            </span>
+                                        </span>
+                                        <div className="flex-1 border-b border-dashed border-b-neutral-500 relative -top-1 mx-2" />
+
+                                        <Link href="/cart">
+                                            <Button
+                                                type="submit"
+                                                className="w-full h-12 text-base"
+                                            >
+                                                Оформить заказ
+                                                <ArrowRight className="w-5 ml-2" />
+                                            </Button>
+                                        </Link>
+                                    </div>
+                                </div>
+                            </SheetFooter>
+                        </>
+                    )}
+                </div>
             </SheetContent>
         </Sheet>
     )
