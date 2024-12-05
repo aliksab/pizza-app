@@ -18,37 +18,12 @@ import { Button } from '../ui/button'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { getCartItemsDetails } from '@/lib/get-cart-items-details'
 import { CartDrawerItem } from './cart-driver-item'
-import { useCartStore } from '@/store/cart'
 import { PizzaSize, PizzaType } from '@/constans/pizza'
-import { useShallow } from 'zustand/react/shallow'
 import { Title } from './title'
-interface Props {
-    className?: string
-}
+import { useCart } from '@/hooks/use-cart'
 
-export const CartDrawer: React.FC<React.PropsWithChildren<Props>> = ({
-    children,
-    className
-}) => {
-    const [
-        totalAmount,
-        fetchCartItems,
-        items,
-        updateItemQuantity,
-        removeCartItem
-    ] = useCartStore(
-        useShallow((state) => [
-            state.totalAmount,
-            state.fetchCartItems,
-            state.items,
-            state.updateItemQuantity,
-            state.removeCartItem
-        ])
-    )
-
-    React.useEffect(() => {
-        fetchCartItems()
-    }, [])
+export const CartDrawer: React.FC<React.PropsWithChildren> = ({ children }) => {
+    const { totalAmount, items, updateItemQuantity, removeCartItem } = useCart()
 
     const onClickCountButton = (
         id: number,
@@ -153,7 +128,7 @@ export const CartDrawer: React.FC<React.PropsWithChildren<Props>> = ({
                                         </span>
                                         <div className="flex-1 border-b border-dashed border-b-neutral-500 relative -top-1 mx-2" />
 
-                                        <Link href="/cart">
+                                        <Link href="/checkout">
                                             <Button
                                                 type="submit"
                                                 className="w-full h-12 text-base"
