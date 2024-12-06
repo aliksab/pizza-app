@@ -99,9 +99,9 @@ export const Filters: React.FC<Props> = ({ className }) => {
                 </div>
                 <RangeSlider
                     min={0}
-                    max={1000}
+                    max={10000}
                     step={10}
-                    value={[prices.priceFrom || 0, prices.priceTo || 1000]}
+                    value={[prices.priceFrom || 0, prices.priceTo || 10000]}
                     onValueChange={([priceFrom, priceTo]) =>
                         setPrice({ priceFrom, priceTo })
                     }
