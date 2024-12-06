@@ -4,23 +4,31 @@ import { WhiteBlock } from './white-block'
 import { CheckoutItemDetails } from './checkout-item-details'
 import { ArrowRight, Package, Truck } from 'lucide-react'
 import { Button } from '../ui/button'
+import { Skeleton } from '../ui/skeleton'
 
 interface Props {
     totalAmount: number
+    loading?: boolean
     className?: string
 }
 
 export const CheckoutSidebar: React.FC<Props> = ({
     totalAmount,
+    loading,
     className
 }) => {
     return (
         <WhiteBlock className="p-6 sticky top-4">
             <div className="flex flex-col gap-1">
                 <span className="text-xl">Итого:</span>
-                <span className="text-3xl font-extrabold">
-                    {totalAmount + 500} ₽
-                </span>
+
+                {loading ? (
+                    <Skeleton className="h-11 w-48" />
+                ) : (
+                    <span className="h-11 text-3xl font-extrabold">
+                        {totalAmount + 500} ₽
+                    </span>
+                )}
             </div>
             <CheckoutItemDetails
                 title={
@@ -29,7 +37,13 @@ export const CheckoutSidebar: React.FC<Props> = ({
                         Стоимость товаров:
                     </div>
                 }
-                value={totalAmount + `₽`}
+                value={
+                    loading ? (
+                        <Skeleton className="h-5 w-20 rounded-[6px]" />
+                    ) : (
+                        `${totalAmount} ₽`
+                    )
+                }
             />
             <CheckoutItemDetails
                 title={
@@ -38,9 +52,16 @@ export const CheckoutSidebar: React.FC<Props> = ({
                         Доставка:
                     </div>
                 }
-                value="500 ₽"
+                value={
+                    loading ? (
+                        <Skeleton className="h-5 w-20 rounded-[6px]" />
+                    ) : (
+                        `500 ₽`
+                    )
+                }
             />
             <Button
+                loading={loading}
                 type="submit"
                 className="w-full h-14 rounded-2xl mt-6 text-base font-bold"
             >

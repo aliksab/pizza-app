@@ -27,12 +27,10 @@ export const ProductForm: React.FC<Props> = ({
         try {
             const itemId = productItemId ?? firstItem.id
             const ingrArr = ingredients ?? []
-            console.log(itemId)
-            const data = await addCartItem({
+            await addCartItem({
                 productItemId: itemId,
                 ingredients: ingrArr
             })
-            console.log(data)
             toast.success('Товар добавлен в корзину')
             _onSubmit?.()
         } catch (error) {

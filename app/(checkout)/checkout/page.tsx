@@ -1,18 +1,60 @@
 'use client'
 
-import { CheckoutItem } from '@/components/shared/checkout-item'
+import { useForm, SubmitHandler, FormProvider } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { CheckoutSidebar } from '@/components/shared/checkout-sidebar'
 import { Container } from '@/components/shared/container'
 import { Title } from '@/components/shared/title'
-import { WhiteBlock } from '@/components/shared/white-block'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { PizzaSize, PizzaType } from '@/constans/pizza'
 import { useCart } from '@/hooks/use-cart'
-import { getCartItemsDetails } from '@/lib/get-cart-items-details'
+import { CheckoutCart } from '@/components/shared/checkout/checkout-cart'
+import { CheckoutPersonalForm } from '@/components/shared/checkout/checkout-personal-form'
+import { CheckoutAddressForm } from '@/components/shared/checkout/checkout-address-form'
+import {
+    checkoutFormSchema,
+    CheckoutFormValues
+} from '@/components/shared/checkout/checkout-form-schema'
+import { cn } from '@/lib/utils'
+import toast from 'react-hot-toast'
+import { create } from 'domain'
+import { createOrder } from '@/app/actions'
+import React from 'react'
 
 export default function CheckoutPage() {
-    const { totalAmount, items, updateItemQuantity, removeCartItem } = useCart()
+    const [submitting, setSubmitting] = React.useState(false)
+    const { totalAmount, items, updateItemQuantity, removeCartItem, loading } =
+        useCart()
+    const form = useForm<CheckoutFormValues>({
+        resolver: zodResolver(checkoutFormSchema),
+        defaultValues: {
+            email: '',
+            firstName: '',
+            lastName: '',
+            phone: '',
+            address: '',
+            comment: ''
+        }
+    })
+
+    const onSubmit = async (data: CheckoutFormValues) => {
+        try {
+            setSubmitting(true)
+            const url = await createOrder(data)
+
+            toast.success('Заказ успешно создан! Переход на оплату..', {
+                icon: '✅'
+            })
+
+            if (url) {
+                location.href = url
+            }
+        } catch (error) {
+            console.error(error)
+            setSubmitting(false)
+            toast.error('Что-то пошло не так', {
+                icon: '❌'
+            })
+        }
+    }
     const onClickCountButton = (
         id: number,
         quantity: number,
@@ -21,6 +63,7 @@ export default function CheckoutPage() {
         const newQuantity = type === 'plus' ? quantity + 1 : quantity - 1
         updateItemQuantity(id, newQuantity)
     }
+
     return (
         <Container className="mt-6">
             <Title
@@ -28,88 +71,40 @@ export default function CheckoutPage() {
                 size="xl"
                 className="font-extrabold mb-6"
             />
-            <div className="flex gap-8">
-                <div className="flex flex-col gap-8 flex-1 mb-20">
-                    <WhiteBlock title="1. Корзина">
-                        <div className="flex flex-col gap-5">
-                            {items.map((item) => (
-                                <CheckoutItem
-                                    key={item.id}
-                                    id={item.id}
-                                    name={item.name}
-                                    price={item.price}
-                                    quantity={item.quantity}
-                                    details={
-                                        item.pizzaSize && item.pizzaType
-                                            ? getCartItemsDetails(
-                                                  item.ingredients,
-                                                  item.pizzaType as PizzaType,
-                                                  item.pizzaSize as PizzaSize
-                                              )
-                                            : ''
-                                    }
-                                    imageUrl={item.imageUrl}
-                                    onClickRemove={() =>
-                                        removeCartItem(item.id)
-                                    }
-                                    onClickCountButton={(type) => {
-                                        onClickCountButton(
-                                            item.id,
-                                            item.quantity,
-                                            type
-                                        )
-                                    }}
-                                />
-                            ))}
-                        </div>
-                    </WhiteBlock>
+            <FormProvider {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)}>
+                    <div className="flex gap-8">
+                        <div className="flex flex-col gap-8 flex-1 mb-20">
+                            <CheckoutCart
+                                items={items}
+                                onClickCountButton={onClickCountButton}
+                                removeCartItem={removeCartItem}
+                                loading={loading}
+                            />
 
-                    <WhiteBlock title="2. Ваши данные">
-                        <div className="grid grid-cols-2 gap-4">
-                            <Input
-                                name="firstName"
-                                className="text-base"
-                                placeholder="Имя"
+                            <CheckoutPersonalForm
+                                className={cn({
+                                    'opacity-30 pointer-events-none': loading
+                                })}
                             />
-                            <Input
-                                name="lastName"
-                                className="text-base"
-                                placeholder="Фамилия"
-                            />
-                            <Input
-                                name="email"
-                                className="text-base"
-                                placeholder="E-Mail"
-                            />
-                            <Input
-                                name="phone"
-                                className="text-base"
-                                placeholder="Телефон"
+
+                            <CheckoutAddressForm
+                                className={cn({
+                                    'opacity-30 pointer-events-none': loading
+                                })}
                             />
                         </div>
-                    </WhiteBlock>
 
-                    <WhiteBlock title="3. Адрес доставки">
-                        <div className="flex flex-col gap-5">
-                            <Input
-                                name="firstName"
-                                className="text-base"
-                                placeholder="Введите адрес.."
-                            />
-                            <Textarea
-                                rows={5}
-                                className="text-base"
-                                placeholder="Комментарий к заказу"
+                        {/** Правая часть*/}
+                        <div className="w-[450px]">
+                            <CheckoutSidebar
+                                loading={loading || submitting}
+                                totalAmount={totalAmount}
                             />
                         </div>
-                    </WhiteBlock>
-                </div>
-
-                {/** Правая часть*/}
-                <div className="w-[450px]">
-                    <CheckoutSidebar totalAmount={totalAmount} />
-                </div>
-            </div>
+                    </div>
+                </form>
+            </FormProvider>
         </Container>
     )
 }
