@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useRef } from 'react'
 import { Title } from './title'
 import { FilterCheckbox } from './filter-checkbox'
 import { Input } from '../ui/input'
@@ -27,6 +27,7 @@ interface QueryFilters extends PriceProps {
 
 export const Filters: React.FC<Props> = ({ className }) => {
     const searchParams = useSearchParams()
+    const isMounted = useRef(false)
     const router = useRouter()
     const { ingredients, loading, onAddId, selectedIds } = useListIngredients()
     const [prices, setPrice] = React.useState<PriceProps>({})
@@ -44,17 +45,19 @@ export const Filters: React.FC<Props> = ({ className }) => {
     }
 
     React.useEffect(() => {
-        const filter = {
-            ...prices,
-            filters: Array.from(filters),
-            ingredients: Array.from(selectedIds)
+        if (isMounted.current) {
+            const filter = {
+                ...prices,
+                filters: Array.from(filters),
+                ingredients: Array.from(selectedIds)
+            }
+            const queryString = qs.stringify(filter, {
+                arrayFormat: 'comma'
+            })
+            router.push(`?${queryString}`, {
+                scroll: false
+            })
         }
-        const queryString = qs.stringify(filter, {
-            arrayFormat: 'comma'
-        })
-        router.push(`?${queryString}`, {
-            scroll: false
-        })
     }, [prices, selectedIds, filters])
 
     return (

@@ -22,7 +22,7 @@ export async function createPayment(details: Props) {
             },
             confirmation: {
                 type: 'redirect',
-                return_url: process.env.NEXT_PUBLIC_YOOKASSA_CALLBACK_URL
+                return_url: process.env.NEXT_PUBLIC_APP_URL + '/?paid'
             }
         },
         {

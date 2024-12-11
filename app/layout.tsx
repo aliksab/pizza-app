@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Nunito } from 'next/font/google'
 import './globals.css'
 import { Toaster } from 'react-hot-toast'
+import { Providers } from '@/components/shared/providers'
 
 const nunito = Nunito({
     subsets: ['cyrillic'],
@@ -17,8 +18,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={nunito.variable}>
-                {children}
-                <Toaster />
+                <Providers>{children}</Providers>
             </body>
         </html>
     )
