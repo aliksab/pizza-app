@@ -10,7 +10,7 @@ interface ReturnProps {
     onAddId: (id: string) => void
 }
 
-export const useListIngredients = (): ReturnProps => {
+export const useListIngredients = () => {
     const [ingredients, setIngredients] = React.useState<Ingredient[]>([])
     const [loading, setLoading] = React.useState(true)
     const [selectedIds, { toggle }] = useSet(new Set<string>([]))

@@ -1,4 +1,3 @@
-import { cn } from '@/lib/utils'
 import React from 'react'
 import { WhiteBlock } from './white-block'
 import { CheckoutItemDetails } from './checkout-item-details'
@@ -12,11 +11,7 @@ interface Props {
     className?: string
 }
 
-export const CheckoutSidebar: React.FC<Props> = ({
-    totalAmount,
-    loading,
-    className
-}) => {
+export const CheckoutSidebar: React.FC<Props> = ({ totalAmount, loading }) => {
     return (
         <WhiteBlock className="p-6 sticky top-4">
             <div className="flex flex-col gap-1">

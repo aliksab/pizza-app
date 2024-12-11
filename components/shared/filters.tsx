@@ -2,14 +2,13 @@
 
 import React, { useRef } from 'react'
 import { Title } from './title'
-import { FilterCheckbox } from './filter-checkbox'
 import { Input } from '../ui/input'
 import { RangeSlider } from '../ui/range-slider'
 import { CheckboxFiltersGroup } from './checkbox-filters-group'
 import { useListIngredients } from '@/hooks/useListIngredients'
 import { useSet } from 'react-use'
 import qs from 'qs'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
 interface Props {
     className?: string
@@ -20,13 +19,7 @@ interface PriceProps {
     priceTo?: number
 }
 
-interface QueryFilters extends PriceProps {
-    filters: string[]
-    ingredients: string[]
-}
-
 export const Filters: React.FC<Props> = ({ className }) => {
-    const searchParams = useSearchParams()
     const isMounted = useRef(false)
     const router = useRouter()
     const { ingredients, loading, onAddId, selectedIds } = useListIngredients()

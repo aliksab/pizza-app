@@ -1,7 +1,5 @@
 import React from 'react'
 import { WhiteBlock } from '../white-block'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
 import { FormTextarea } from '../form-components/form-textarea'
 import { AddressInput } from '../address-input'
 import { Controller, useFormContext } from 'react-hook-form'
@@ -14,7 +12,7 @@ interface Props {
 export const CheckoutAddressForm: React.FC<Props> = ({ className }) => {
     const { control } = useFormContext()
     return (
-        <WhiteBlock title="3. Адрес доставки">
+        <WhiteBlock title="3. Адрес доставки" className={className}>
             <div className="flex flex-col gap-5">
                 <Controller
                     name="address"

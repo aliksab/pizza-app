@@ -3,7 +3,6 @@ import { Container } from '@/components/shared/container'
 import { TopBar } from '@/components/shared/top-bar'
 import { Filters } from '@/components/shared/filters'
 import { ProductsGroupList } from '@/components/shared/products-group-list'
-import { prisma } from '@/prisma/prisma-client'
 import { Suspense } from 'react'
 import { findPizzas, GetSearchParams } from '@/lib/find-pizzas'
 
