@@ -11,7 +11,7 @@ interface ReturnProps {
 }
 
 export const useListIngredients = () => {
-    const [ingredients, setIngredients] = React.useState<Ingredient[]>([])
+    const [ingredients, setIngredients] = React.useState([])
     const [loading, setLoading] = React.useState(true)
     const [selectedIds, { toggle }] = useSet(new Set<string>([]))
 
@@ -19,7 +19,8 @@ export const useListIngredients = () => {
         async function fetchIngredients() {
             try {
                 setLoading(true)
-                const ingredients = await Api.ingredients.getAll()
+                // @ts-ignore
+                const { ingredients } = await Api.ingredients.getAll()
                 setIngredients(ingredients)
             } catch (error) {
                 console.log(error)

@@ -24,8 +24,11 @@ export const Filters: React.FC<Props> = ({ className }) => {
     const router = useRouter()
     const { ingredients, loading, onAddId, selectedIds } = useListIngredients()
     const [prices, setPrice] = React.useState<PriceProps>({})
+    console.log(ingredients)
     const items = ingredients.map((item) => ({
+        // @ts-ignore
         value: String(item.id),
+        // @ts-ignore
         text: item.name
     }))
     const [filters, { toggle: toggleFilter }] = useSet(new Set<string>([]))
