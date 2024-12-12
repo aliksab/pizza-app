@@ -1,5 +1,3 @@
-import { Ingredient } from '@prisma/client'
-
 export interface CartItemProps {
     id: number
     imageUrl: string

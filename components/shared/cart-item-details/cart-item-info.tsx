@@ -1,6 +1,4 @@
-import { mapPizzaType, PizzaSize, PizzaType } from '@/constans/pizza'
 import { cn } from '@/lib/utils'
-import { Ingredient } from '@prisma/client'
 
 interface Props {
     name: string

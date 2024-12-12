@@ -1,6 +1,6 @@
 'use client'
 
-import { Dialog, DialogContent } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
 import React from 'react'
 import { useRouter } from 'next/navigation'
@@ -17,6 +17,7 @@ export const ChooseProductModal: React.FC<Props> = ({ product, className }) => {
 
     return (
         <Dialog open={Boolean(product)} onOpenChange={() => router.back()}>
+            <DialogTitle></DialogTitle>
             <DialogContent
                 className={cn(
                     'p-0 w-[1060px] max-w-[1060px] min-h-[600px] bg-white overflow-hidden',

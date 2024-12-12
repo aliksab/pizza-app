@@ -4,10 +4,11 @@ import { prisma } from '@/prisma/prisma-client'
 import { notFound } from 'next/navigation'
 
 export default async function ProductPage({
-    params: { id }
+    params
 }: {
-    params: { id: string }
+    params: Promise<{ id: string }>
 }) {
+    const id = (await params).id
     const product = await prisma.product.findFirst({
         where: { id: Number(id) },
         include: {

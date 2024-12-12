@@ -6,7 +6,6 @@ import {
     Sheet,
     SheetClose,
     SheetContent,
-    SheetDescription,
     SheetFooter,
     SheetHeader,
     SheetTitle,
@@ -86,9 +85,8 @@ export const CartDrawer: React.FC<React.PropsWithChildren> = ({ children }) => {
                         <>
                             <div className="-mx-6 mt-5 flex-1 overflow-auto scrollbar">
                                 {items.map((item) => (
-                                    <div className="mb-2">
+                                    <div className="mb-2" key={item.id}>
                                         <CartDrawerItem
-                                            key={item.id}
                                             id={item.id}
                                             imageUrl={item.imageUrl}
                                             details={

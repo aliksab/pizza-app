@@ -1,7 +1,6 @@
 'use client'
 
 import { ProductWithRelations } from '@/@types/prisma'
-import { cn } from '@/lib/utils'
 import { useCartStore } from '@/store/cart'
 import React from 'react'
 import toast from 'react-hot-toast'
