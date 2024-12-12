@@ -8,7 +8,7 @@ import { updateCartTotalAmount } from '@/lib/update-cart-total-amount'
 export async function GET(req: NextRequest) {
     try {
         const token = req.cookies.get('cartToken')?.value
-        console.log(token)
+        // console.log(token)
         if (!token) {
             return NextResponse.json({ totalAmount: 0, items: [] })
         }
@@ -45,7 +45,6 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
     try {
-        console.log('TUT')
         let token = req.cookies.get('cartToken')?.value
 
         if (!token) {
@@ -92,7 +91,6 @@ export async function POST(req: NextRequest) {
         const updatedUserCart = await updateCartTotalAmount(token)
         const resp = NextResponse.json(updatedUserCart)
         resp.cookies.set('cartToken', token)
-        console.log(resp)
         return resp
     } catch (error) {
         console.log(error)

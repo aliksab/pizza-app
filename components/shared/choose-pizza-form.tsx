@@ -55,11 +55,6 @@ export const ChoosePizzaForm: React.FC<Props> = ({
         if (currentItemId) {
             onSubmit(currentItemId, Array.from(selectedIngredients))
         }
-        console.log({
-            size,
-            type,
-            ingredients: selectedIngredients
-        })
     }
 
     const avaiblePizzas = items.filter((item) => item.pizzaType === type)

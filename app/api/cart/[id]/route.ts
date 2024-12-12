@@ -4,10 +4,10 @@ import { NextRequest, NextResponse } from 'next/server'
 
 export async function PATCH(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        const { id } = params
+        const id = (await params).id
         const data = (await req.json()) as { quantity: number }
         const token = req.cookies.get('cartToken')?.value
 
@@ -37,6 +37,7 @@ export async function PATCH(
         const updateUserCart = await updateCartTotalAmount(token)
         return NextResponse.json(updateUserCart)
     } catch (error) {
+        console.log(error)
         return NextResponse.json(
             { message: 'Не удалось обновить корзину' },
             { status: 500 }
@@ -46,10 +47,10 @@ export async function PATCH(
 
 export async function DELETE(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        const { id } = params
+        const id = (await params).id
         const token = req.cookies.get('cartToken')?.value
 
         if (!token) {
@@ -75,6 +76,7 @@ export async function DELETE(
         const updateUserCart = await updateCartTotalAmount(token)
         return NextResponse.json(updateUserCart)
     } catch (error) {
+        console.log(error)
         return NextResponse.json(
             { message: 'Не удалось удалить товар' },
             { status: 500 }

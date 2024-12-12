@@ -1,6 +1,5 @@
 import { cn } from '@/lib/utils'
 import React from 'react'
-import { CartItemDetailsImage } from './cart-item-details/cart-item-details-image'
 import * as CartItem from './cart-item-details'
 import { CartItemProps } from './cart-item-details/cart-item-details.types'
 import { CountButton } from './count-button'
@@ -13,7 +12,6 @@ interface Props extends CartItemProps {
 }
 
 export const CartDrawerItem: React.FC<Props> = ({
-    id,
     imageUrl,
     details,
     name,

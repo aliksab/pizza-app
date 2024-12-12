@@ -3,15 +3,15 @@ import { Container } from '@/components/shared/container'
 import { TopBar } from '@/components/shared/top-bar'
 import { Filters } from '@/components/shared/filters'
 import { ProductsGroupList } from '@/components/shared/products-group-list'
-import { prisma } from '@/prisma/prisma-client'
 import { Suspense } from 'react'
 import { findPizzas, GetSearchParams } from '@/lib/find-pizzas'
 
-export default async function Home({
-    searchParams
-}: {
-    searchParams: GetSearchParams
-}) {
+export default async function Home(
+    props: {
+        searchParams: Promise<GetSearchParams>
+    }
+) {
+    const searchParams = await props.searchParams;
     const categories = await findPizzas(searchParams)
     return (
         <>

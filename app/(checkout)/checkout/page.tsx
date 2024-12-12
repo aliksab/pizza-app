@@ -1,6 +1,6 @@
 'use client'
 
-import { useForm, SubmitHandler, FormProvider } from 'react-hook-form'
+import { useForm, FormProvider } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CheckoutSidebar } from '@/components/shared/checkout-sidebar'
 import { Container } from '@/components/shared/container'
@@ -15,7 +15,6 @@ import {
 } from '@/components/shared/checkout/checkout-form-schema'
 import { cn } from '@/lib/utils'
 import toast from 'react-hot-toast'
-import { create } from 'domain'
 import { createOrder } from '@/app/actions'
 import React from 'react'
 

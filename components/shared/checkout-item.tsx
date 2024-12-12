@@ -1,6 +1,5 @@
 import React from 'react'
 import { CartItemProps } from './cart-item-details/cart-item-details.types'
-import { CountButtonProps } from './count-button'
 import { cn } from '@/lib/utils'
 import { CartItemDetailsImage } from './cart-item-details/cart-item-details-image'
 import { CartItemInfo } from './cart-item-details/cart-item-info'

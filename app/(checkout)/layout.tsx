@@ -1,4 +1,5 @@
 import { Header } from '@/components/shared/header'
+import { Suspense } from 'react'
 
 export const metadata = {
     title: 'Корзина | Aliksab PIZZZZA',
@@ -12,11 +13,13 @@ export default function CheckoutLayout({
 }) {
     return (
         <main className="min-h-screen bg-[#F4F1EE]">
-            <Header
-                className="border-gray-200"
-                hasSearch={false}
-                hasCart={false}
-            />
+            <Suspense>
+                <Header
+                    className="border-gray-200"
+                    hasSearch={false}
+                    hasCart={false}
+                />
+            </Suspense>
             {children}
         </main>
     )

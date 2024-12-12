@@ -1,7 +1,7 @@
 'use client'
 
 import { cn } from '@/lib/utils'
-import React, { use } from 'react'
+import React from 'react'
 import { Button } from '../ui/button'
 import { ArrowRight, ShoppingCart } from 'lucide-react'
 import { CartDrawer } from './cart-drawer'
